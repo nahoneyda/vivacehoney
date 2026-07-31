@@ -88,6 +88,10 @@ app.get("/api/health", async (_req, res) => {
   }
 });
 
+app.get("/pray", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "pray.html"));
+});
+
 app.get("/api/qr", async (req, res) => {
   try {
     const host = req.get("host");
