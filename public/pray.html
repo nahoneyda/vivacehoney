@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>기도제목 나누기</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+<body class="mobile">
+  <main class="mobile-wrap">
+    <div class="eyebrow">PRAYER TOGETHER</div>
+    <h1>기도제목 나누기</h1>
+    <p class="intro">함께 기도했으면 하는 내용을 적어 주세요. 이름은 입력하지 않아도 됩니다.</p>
+
+    <form id="form" class="form-card">
+      <label for="name">이름 <span>(선택)</span></label>
+      <input id="name" maxlength="30" placeholder="익명으로 남겨도 됩니다" />
+
+      <label for="text">기도제목</label>
+      <textarea id="text" maxlength="300" required placeholder="예: 가족의 건강과 회복을 위해 기도해 주세요."></textarea>
+
+      <div class="char"><span id="count">0</span>/300</div>
+      <button id="submitBtn" type="submit">기도제목 보내기</button>
+      <div id="message" class="message"></div>
+    </form>
+
+    <p class="privacy">개인정보·연락처·민감한 정보는 화면에 공개될 수 있으니 입력하지 않는 것을 권장합니다.</p>
+  </main>
+  <script src="/pray.js"></script>
+</body>
+</html>

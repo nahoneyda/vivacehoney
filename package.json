@@ -1,0 +1,21 @@
+{
+  "name": "church-prayer-live",
+  "version": "1.1.0",
+  "private": true,
+  "description": "QR-based live prayer wall for church events with Supabase persistence",
+  "main": "server.js",
+  "scripts": {
+    "build": "node -e \"console.log('No build step required')\"",
+    "start": "node server.js",
+    "start:prod": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.52.1",
+    "express": "^4.21.2",
+    "qrcode": "^1.5.4",
+    "socket.io": "^4.8.1"
+  }
+}
