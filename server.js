@@ -8,6 +8,8 @@ const { createClient } = require("@supabase/supabase-js");
 const app = express();
 app.set("trust proxy", 1);
 
+require("dotenv").config();
+
 const server = http.createServer(app);
 const io = new Server(server);
 
