@@ -1,51 +1,69 @@
 <!doctype html>
 <html lang="ko">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="theme-color" content="#08111f" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>옥토 기도 나눔</title>
-  <link rel="stylesheet" href="/style.css" />
+  /style.css
 </head>
+
 <body class="mobile">
-  <main class="mobile-wrap prayer-share-page">
-    <header class="share-header">
+
+  <main class="mobile-wrap">
+
+    <div class="share-header">
       <div class="eyebrow">PRAYER TOGETHER</div>
-      <h1>옥토 기도 나눔 <span class="pray-symbol" aria-hidden="true">🙏</span></h1>
-      <p class="intro">함께 기도하면 하나님이 들으십니다.<br />기도제목을 나누고 서로를 위해 기도해 주세요.</p>
-    </header>
+
+      <h1>
+        옥토 기도 나눔
+        <span class="pray-symbol">🙏</span>
+      </h1>
+
+      <p class="intro">
+        함께 기도하면 하나님이 들으십니다.<br>
+        기도제목을 나누고 서로를 위해 기도해주세요.
+      </p>
+    </div>
 
     <form id="form" class="form-card compact-form">
-      <label for="name">이름 <span>(선택)</span></label>
-      <input id="name" maxlength="30" autocomplete="name" placeholder="익명으로 남겨도 됩니다" />
 
-      <label for="text">기도제목</label>
+      <label for="name">
+        이름 <span>(선택)</span>
+      </label>
+
+      <input
+        id="name"
+        maxlength="30"
+        placeholder="익명으로 남겨도 됩니다">
+
+      <label for="text">
+        기도제목
+      </label>
+
       <div class="textarea-wrap">
-        <textarea id="text" maxlength="300" required placeholder="예: 가족의 건강과 회복을 위해 기도해 주세요."></textarea>
-        <div class="char"><span id="count">0</span>/300</div>
+        <textarea
+          id="text"
+          maxlength="300"
+          required
+          placeholder="예: 가족의 건강과 회복을 위해 기도해 주세요."></textarea>
+
+        <div class="char">
+          <span id="count">0</span>/300
+        </div>
       </div>
 
-      <button id="submitBtn" type="submit">기도제목 나누기 <span aria-hidden="true">✈</span></button>
-      <div id="message" class="message" role="status" aria-live="polite"></div>
+      <button id="submitBtn" type="submit">
+        기도제목 나누기
+      </button>
+
+      <div id="message" class="message"></div>
+
     </form>
 
-    <section class="shared-prayers" aria-labelledby="sharedPrayerTitle">
-      <div class="shared-prayers-head">
-        <h2 id="sharedPrayerTitle"><span aria-hidden="true">👥</span> 함께 나누는 기도제목 <small>(랜덤 10건)</small></h2>
-        <button id="refreshPrayers" class="refresh-btn" type="button" aria-label="기도제목 새로고침" title="다른 기도제목 보기">↻</button>
-      </div>
+    <p class="privacy">
+      개인정보·연락처·민감한 정보는 입력하지 않는 것을 권장합니다.
+    </p>
 
-      <div id="prayerList" class="prayer-list">
-        <div class="prayer-list-empty">기도제목을 불러오는 중입니다.</div>
-      </div>
-
-      <p class="list-guide">※ 최근 기도제목 중 랜덤으로 최대 10건을 보여줍니다.</p>
-    </section>
-
-    <p class="privacy">개인정보·연락처·민감한 정보는 공개될 수 있으니 입력하지 않는 것을 권장합니다.</p>
   </main>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/pray.js"></script>
-</body>
-</html>
+  <script src="/pray.js"></</html>
