@@ -6,26 +6,29 @@ const path = require("path");
 const { createClient } = require("@supabase/supabase-js");
 
 const app = express();
+app.set("trust proxy", 1);
+
 const server = http.createServer(app);
 const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
 const ADMIN_KEY = process.env.ADMIN_KEY || "change-me";
 const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  console.error("Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY");
+if (!SUPABASE_URL || !SUPABASE_SECRET_KEY) {
+  console.error("Missing SUPABASE_URL or SUPABASE_SECRET_KEY");
   process.exit(1);
 }
 
 const supabase = createClient(
   SUPABASE_URL,
-  SUPABASE_SERVICE_ROLE_KEY,
+  SUPABASE_SECRET_KEY,
   {
     auth: {
       persistSession: false,
-      autoRefreshToken: false
+      autoRefreshToken: false,
+      detectSessionInUrl: false
     }
   }
 );
@@ -68,22 +71,39 @@ app.get("/api/health", async (_req, res) => {
       .select("*", { count: "exact", head: true });
 
     if (error) throw error;
-    res.json({ ok: true, database: "supabase", count: count || 0 });
+
+    res.json({
+      ok: true,
+      database: "supabase",
+      count: count || 0
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ ok: false, database: "supabase", error: error.message });
+
+    res.status(500).json({
+      ok: false,
+      database: "supabase",
+      error: error.message
+    });
   }
 });
 
 app.get("/api/qr", async (req, res) => {
   try {
-    const base = `${req.protocol}://${req.get("host")}`;
-    const url = `${base}/pray`;
+    const host = req.get("host");
+    const protocol =
+      req.get("x-forwarded-proto") ||
+      req.protocol ||
+      "https";
+
+    const url = `${protocol}://${host}/pray`;
+
     const dataUrl = await QRCode.toDataURL(url, {
       width: 520,
       margin: 1,
       errorCorrectionLevel: "M"
     });
+
     res.json({ url, dataUrl });
   } catch (error) {
     console.error(error);
@@ -97,7 +117,9 @@ app.get("/api/prayers", async (_req, res) => {
     res.json(prayers);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "기도제목을 불러오지 못했습니다." });
+    res.status(500).json({
+      error: "기도제목을 불러오지 못했습니다."
+    });
   }
 });
 
@@ -106,7 +128,9 @@ app.post("/api/prayers", async (req, res) => {
   const name = cleanText(req.body?.name).slice(0, 30);
 
   if (!text) {
-    return res.status(400).json({ error: "기도제목을 입력해 주세요." });
+    return res.status(400).json({
+      error: "기도제목을 입력해 주세요."
+    });
   }
 
   try {
@@ -122,19 +146,29 @@ app.post("/api/prayers", async (req, res) => {
     if (error) throw error;
 
     const prayer = normalizePrayer(data);
+
     io.emit("prayer:new", prayer);
 
-    res.status(201).json({ ok: true, prayer });
+    res.status(201).json({
+      ok: true,
+      prayer
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "기도제목 저장에 실패했습니다." });
+
+    res.status(500).json({
+      error: "기도제목 저장에 실패했습니다."
+    });
   }
 });
 
 app.post("/api/admin/clear", async (req, res) => {
   const key = req.get("x-admin-key");
+
   if (key !== ADMIN_KEY) {
-    return res.status(401).json({ error: "Unauthorized" });
+    return res.status(401).json({
+      error: "Unauthorized"
+    });
   }
 
   try {
@@ -146,14 +180,20 @@ app.post("/api/admin/clear", async (req, res) => {
     if (error) throw error;
 
     io.emit("prayer:clear");
-    res.json({ ok: true });
+
+    res.json({
+      ok: true
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "전체 삭제에 실패했습니다." });
+
+    res.status(500).json({
+      error: "전체 삭제에 실패했습니다."
+    });
   }
 });
 
-io.on("connection", async (socket) => {
+io.on("connection", async socket => {
   try {
     const prayers = await getRecentPrayers(100);
     socket.emit("prayer:init", prayers);
@@ -164,5 +204,7 @@ io.on("connection", async (socket) => {
 });
 
 server.listen(PORT, "0.0.0.0", () => {
-  console.log(`Church Prayer Live v1.1 running on port ${PORT}`);
+  console.log(
+    `Church Prayer Live v1.1 running on port ${PORT}`
+  );
 });
