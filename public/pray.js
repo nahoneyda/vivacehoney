@@ -1,80 +1,69 @@
-<!doctype html>
-<html lang="ko">
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>옥토 기도 나눔</title>
-  <link rel="stylesheet" href="/style.css">
-</head>
+const socket = io();
 
-<body class="mobile">
+const form = document.getElementById("form");
+const nameInput = document.getElementById("name");
+const textInput = document.getElementById("text");
+const countSpan = document.getElementById("count");
+const submitBtn = document.getElementById("submitBtn");
+const message = document.getElementById("message");
 
-  <main class="mobile-wrap">
+// 글자 수 세기
+if (textInput && countSpan) {
+  textInput.addEventListener("input", () => {
+    countSpan.textContent = textInput.value.length;
+  });
+}
 
-    <div class="share-header">
-      <div class="eyebrow">PRAYER TOGETHER</div>
+// 폼 제출 이벤트
+if (form) {
+  form.addEventListener("submit", async (e) => {
+    // 🔥 중요: 기본 폼 제출 동작(페이지 새로고침 및 URL ? 추가) 방지
+    e.preventDefault();
 
-      <h1>
-        옥토 기도 나눔
-        <span class="pray-symbol">🙏</span>
-      </h1>
+    const name = nameInput ? nameInput.value.trim() : "";
+    const text = textInput ? textInput.value.trim() : "";
 
-      <p class="intro">
-        함께 기도하면 하나님이 들으십니다.<br>
-        기도제목을 나누고 서로를 위해 기도해주세요.
-      </p>
-    </div>
+    if (!text) {
+      showMessage("기도제목을 입력해 주세요.", "error");
+      return;
+    }
 
-    <form id="form" class="form-card compact-form">
+    // 버튼 중복 클릭 방지
+    submitBtn.disabled = true;
+    submitBtn.textContent = "저장 중...";
+    showMessage("", "");
 
-      <label for="name">
-        이름 <span>(선택)</span>
-      </label>
+    try {
+      const response = await fetch("/api/prayers", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ name, text })
+      });
 
-      <input
-        id="name"
-        maxlength="30"
-        placeholder="익명으로 남겨도 됩니다">
+      const result = await response.json();
 
-      <label for="text">
-        기도제목
-      </label>
+      if (response.ok && result.success) {
+        showMessage("기도제목이 정상적으로 나누어졌습니다. 🙏", "ok");
+        if (textInput) textInput.value = "";
+        if (nameInput) nameInput.value = "";
+        if (countSpan) countSpan.textContent = "0";
+      } else {
+        showMessage(result.error || "저장에 실패했습니다. 다시 시도해 주세요.", "error");
+      }
+    } catch (err) {
+      console.error("제출 에러:", err);
+      showMessage("서버 통신 중 오류가 발생했습니다.", "error");
+    } finally {
+      submitBtn.disabled = false;
+      submitBtn.textContent = "기도제목 나누기";
+    }
+  });
+}
 
-      <div class="textarea-wrap">
-        <textarea
-          id="text"
-          maxlength="300"
-          required
-          placeholder="예: 가족의 건강과 회복을 위해 기도해 주세요."></textarea>
-
-        <div class="char">
-          <span id="count">0</span>/300
-        </div>
-      </div>
-
-      <button id="submitBtn" type="submit">
-        기도제목 나누기
-      </button>
-
-      <div id="message" class="message"></div>
-
-    </form>
-
-    <!-- 홈 화면 이동 버튼 -->
-    <div class="home-btn-wrap">
-      <a href="/" class="home-btn">
-        🏠 "함께 기도해요" 홈 화면으로 이동
-      </a>
-    </div>
-
-    <p class="privacy">
-      개인정보·연락처·민감한 정보는 입력하지 않는 것을 권장합니다.
-    </p>
-
-  </main>
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="/pray.js"></script>
-
-</body>
-</html>
+function showMessage(msg, type) {
+  if (!message) return;
+  message.textContent = msg;
+  message.className = `message ${type}`;
+}
