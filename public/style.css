@@ -475,4 +475,37 @@ textarea:focus {
     font-size: 16px;
     padding: 12px;
   }
+
+
+/* ----------------------------------------------------
+   HOME BUTTON (홈 화면 이동 버튼)
+---------------------------------------------------- */
+
+.home-btn-wrap {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.home-btn {
+  display: inline-block;
+  width: 100%;
+  padding: 12px 18px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--panel-border);
+  color: var(--text-main);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
+  transition: all 0.2s ease;
+}
+
+.home-btn:hover {
+  background: #ffffff;
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  transform: translateY(-1px);
+}
+
 }
