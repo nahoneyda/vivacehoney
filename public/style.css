@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap');
+
 :root {
   --bg-gradient: linear-gradient(135deg, #fdfbf7 0%, #f4f6fb 50%, #f3effe 100%);
   --panel-bg: rgba(255, 255, 255, 0.88);
@@ -27,7 +29,7 @@ html, body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  font-family: Pretendard, "Noto Sans KR", system-ui, -apple-system, sans-serif;
+  font-family: "Noto Sans KR", Pretendard, system-ui, -apple-system, sans-serif;
 }
 
 body {
@@ -63,7 +65,7 @@ body {
 }
 
 .hero h1 {
-  font-size: clamp(40px, 5vw, 68px);
+  font-size: clamp(36px, 4.5vw, 60px);
   margin: 4px 0 8px 0;
   line-height: 1.1;
   font-weight: 900;
@@ -72,7 +74,7 @@ body {
 
 .hero p {
   color: var(--text-muted);
-  font-size: clamp(16px, 1.4vw, 22px);
+  font-size: clamp(15px, 1.3vw, 20px);
   line-height: 1.5;
   margin: 0;
 }
@@ -131,7 +133,7 @@ body {
   color: var(--text-main);
 }
 
-/* 🔍 돋보기 버튼 */
+/* 🔍 돋보기 축소/확대 버튼 */
 .qr-toggle-btn {
   position: absolute;
   top: 12px;
@@ -175,15 +177,10 @@ body {
   display: none;
 }
 
-/* 🔥 QR 축소 시 오른쪽 기도제목 글씨 크기 단정하게 축소 */
-.display-grid.qr-minimized .prayer-text {
-  font-size: clamp(22px, 2.4vw, 36px) !important;
-}
-
 /* 기도 제목 카드 */
 .prayer-card {
-  min-height: 380px;
-  padding: 36px 44px;
+  min-height: 280px;
+  padding: 28px 36px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -193,19 +190,21 @@ body {
 .prayer-label {
   color: var(--accent-gold);
   font-weight: 800;
-  margin-bottom: 16px;
-  font-size: 16px;
+  margin-bottom: 12px;
+  font-size: 15px;
 }
 
+/* 📌 메인 기도제목: 하단 목록(16px)보다 2px 더 큰 18px / Noto Sans KR 적용 */
 .prayer-text {
-  font-size: clamp(28px, 3.2vw, 52px);
-  line-height: 1.38;
-  font-weight: 800;
+  font-family: "Noto Sans KR", sans-serif;
+  font-size: 18px !important;
+  line-height: 1.6;
+  font-weight: 700;
   color: #0f172a;
   word-break: keep-all;
   opacity: 0.25;
   transform: translateY(6px);
-  transition: opacity 0.35s ease, transform 0.35s ease, font-size 0.3s ease;
+  transition: opacity 0.35s ease, transform 0.35s ease;
 }
 
 .prayer-text.show {
@@ -214,17 +213,17 @@ body {
 }
 
 .prayer-name {
-  margin-top: 20px;
+  margin-top: 14px;
   color: var(--text-muted);
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 700;
 }
 
 .counter {
   margin-top: auto;
-  padding-top: 20px;
+  padding-top: 14px;
   color: var(--text-muted2);
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
 }
 
@@ -294,6 +293,7 @@ input, textarea {
   color: var(--text-main);
   border-radius: 12px;
   outline: none;
+  font-family: "Noto Sans KR", sans-serif;
   transition: all 0.2s ease;
 }
 
@@ -398,7 +398,7 @@ input:focus, textarea:focus {
   font-size: 12px;
 }
 
-/* 🔥 하단 기도 목록 영역 (제목 보더 제거 및 여백 정리) */
+/* 하단 기도 목록 영역 */
 .recent-prayers-section {
   margin-top: 24px;
   background: var(--panel-bg);
@@ -416,7 +416,7 @@ input:focus, textarea:focus {
   gap: 12px;
 }
 
-/* 🔥 하단 기도 카드 가독성 개선 (폰트 확대 & 가독성 향상) */
+/* 📌 하단 기도 목록 카드 (16px 기준) */
 .recent-item {
   display: flex;
   align-items: center;
@@ -440,8 +440,9 @@ input:focus, textarea:focus {
 }
 
 .recent-text {
+  font-family: "Noto Sans KR", sans-serif;
   color: #1e293b;
-  font-weight: 600;
+  font-weight: 500;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -460,6 +461,6 @@ input:focus, textarea:focus {
 @media (max-width: 900px) {
   .display-grid { grid-template-columns: 1fr !important; }
   .prayer-card { padding: 24px; min-height: auto; }
-  .prayer-text { font-size: 26px; }
+  .prayer-text { font-size: 18px !important; }
   .recent-prayer-list { grid-template-columns: 1fr; }
 }
