@@ -28,7 +28,9 @@
 html, body {
   margin: 0;
   padding: 0;
+  width: 100%;
   min-height: 100%;
+  overflow-x: hidden; /* 가로 스크롤 완전 방지 */
   font-family: "Noto Sans KR", Pretendard, system-ui, -apple-system, sans-serif;
 }
 
@@ -44,16 +46,18 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px 0;
+  padding: 20px 12px;
 }
 
 .screen-wrap {
-  width: min(1380px, 92vw);
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
 .hero {
   text-align: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
 }
 
 .eyebrow {
@@ -65,7 +69,7 @@ body {
 }
 
 .hero h1 {
-  font-size: clamp(36px, 4.5vw, 60px);
+  font-size: clamp(32px, 5vw, 52px);
   margin: 4px 0 8px 0;
   line-height: 1.1;
   font-weight: 900;
@@ -74,35 +78,34 @@ body {
 
 .hero p {
   color: var(--text-muted);
-  font-size: clamp(15px, 1.3vw, 20px);
+  font-size: clamp(14px, 1.4vw, 18px);
   line-height: 1.5;
   margin: 0;
 }
 
-.display-grid {
-  display: grid;
-  grid-template-columns: 360px 1fr;
-  gap: 24px;
-  align-items: stretch;
-  transition: grid-template-columns 0.3s ease;
+/* QR 카드 영역 */
+.qr-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 20px;
+  width: 100%;
 }
 
-.qr-card, .prayer-card, .form-card {
+.qr-card {
+  width: 100%;
+  max-width: 360px;
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   border: 1px solid var(--panel-border);
   background: var(--panel-bg);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
   border-radius: 24px;
   box-shadow: var(--panel-shadow);
-}
-
-.qr-card {
-  padding: 24px;
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
   border-top: 4px solid var(--accent-gold);
   position: relative;
   transition: all 0.3s ease;
@@ -110,9 +113,9 @@ body {
 
 .qr-card img {
   width: 100%;
-  max-width: 270px;
+  max-width: 220px;
   background: #ffffff;
-  padding: 12px;
+  padding: 10px;
   border-radius: 16px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
@@ -120,20 +123,20 @@ body {
 }
 
 .url {
-  margin-top: 12px;
+  margin-top: 10px;
   color: var(--text-muted);
-  font-size: 14px;
-  overflow-wrap: anywhere;
+  font-size: 13px;
+  word-break: break-all;
 }
 
 .qr-label {
-  margin-top: 8px;
+  margin-top: 6px;
   font-weight: 700;
-  font-size: 15px;
+  font-size: 14px;
   color: var(--text-main);
 }
 
-/* 🔍 돋보기 축소/확대 버튼 */
+/* 🔍 돋보기 버튼 */
 .qr-toggle-btn {
   position: absolute;
   top: 12px;
@@ -144,7 +147,7 @@ body {
   color: #1e293b;
   font-size: 13px;
   font-weight: 800;
-  padding: 6px 14px;
+  padding: 6px 12px;
   border-radius: 20px;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
@@ -155,20 +158,16 @@ body {
   background: var(--accent-gold);
   color: #ffffff;
   border-color: var(--accent-gold);
-  transform: scale(1.05);
 }
 
-/* 🔍 QR 축소 상태 적용 */
-.display-grid.qr-minimized {
-  grid-template-columns: 200px 1fr !important;
-}
-
+/* QR 축소 시 */
 .qr-card.minimized {
-  padding: 16px 8px;
+  max-width: 180px;
+  padding: 12px 8px;
 }
 
 .qr-card.minimized img {
-  max-width: 120px !important;
+  max-width: 110px !important;
   padding: 4px;
 }
 
@@ -177,54 +176,80 @@ body {
   display: none;
 }
 
-/* 기도 제목 카드 */
-.prayer-card {
-  min-height: 280px;
-  padding: 28px 36px;
+/* 하단 기도 목록 영역 (가로 넘침 완벽 방지) */
+.recent-prayers-section {
+  width: 100%;
+  background: var(--panel-bg);
+  border: 1px solid var(--panel-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 20px;
+  padding: 18px 20px;
+  box-shadow: var(--panel-shadow);
+}
+
+.recent-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 12px;
+}
+
+.counter-badge {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent-gold);
+  background: rgba(197, 155, 39, 0.12);
+  padding: 4px 12px;
+  border-radius: 12px;
+}
+
+.recent-prayer-list {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  border-top: 4px solid #c084fc;
+  gap: 12px;
+  width: 100%;
 }
 
-.prayer-label {
-  color: var(--accent-gold);
+/* 🔥 기도 카드: 가로 확장 및 화면 폭 맞춤 / 자동 줄바꿈 */
+.recent-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 14px 18px;
+  width: 100%;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.recent-name {
   font-weight: 800;
-  margin-bottom: 12px;
-  font-size: 15px;
-}
-
-/* 📌 메인 기도제목: 하단 목록(16px)보다 2px 더 큰 18px / Noto Sans KR 적용 */
-.prayer-text {
-  font-family: "Noto Sans KR", sans-serif;
-  font-size: 18px !important;
-  line-height: 1.6;
-  font-weight: 700;
   color: #0f172a;
-  word-break: keep-all;
-  opacity: 0.25;
-  transform: translateY(6px);
-  transition: opacity 0.35s ease, transform 0.35s ease;
+  white-space: nowrap;
+  background: #f1f5f9;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  flex-shrink: 0;
 }
 
-.prayer-text.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.prayer-name {
-  margin-top: 14px;
-  color: var(--text-muted);
+.recent-text {
+  font-family: "Noto Sans KR", sans-serif;
+  color: #1e293b;
   font-size: 16px;
-  font-weight: 700;
+  line-height: 1.6;
+  font-weight: 500;
+  width: 100%;
+  word-break: break-all; /* 긴 문장도 화면에 맞춰 자동 줄바꿈 */
+  overflow-wrap: break-word;
 }
 
-.counter {
-  margin-top: auto;
-  padding-top: 14px;
+.recent-empty {
+  text-align: center;
   color: var(--text-muted2);
-  font-size: 13px;
-  font-weight: 600;
+  padding: 20px;
+  font-size: 15px;
 }
 
 /* MOBILE (기도 입력 폼 / pray.html) */
@@ -252,9 +277,7 @@ body {
   color: #0f172a;
 }
 
-.pray-symbol {
-  font-size: 0.8em;
-}
+.pray-symbol { font-size: 0.8em; }
 
 .intro {
   color: var(--text-muted);
@@ -265,6 +288,9 @@ body {
 
 .compact-form {
   padding: 20px 24px;
+  border: 1px solid var(--panel-border);
+  background: var(--panel-bg);
+  border-radius: 24px;
   border-top: 4px solid var(--accent-gold);
 }
 
@@ -276,9 +302,7 @@ label {
   color: var(--text-main);
 }
 
-label:not(:first-child) {
-  margin-top: 14px;
-}
+label:not(:first-child) { margin-top: 14px; }
 
 label span {
   color: var(--text-muted2);
@@ -312,9 +336,7 @@ textarea {
   line-height: 1.6;
 }
 
-input::placeholder, textarea::placeholder {
-  color: #a0aec0;
-}
+input::placeholder, textarea::placeholder { color: #a0aec0; }
 
 input:focus, textarea:focus {
   border-color: var(--input-focus);
@@ -322,9 +344,7 @@ input:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
 }
 
-.textarea-wrap {
-  position: relative;
-}
+.textarea-wrap { position: relative; }
 
 .char {
   position: absolute;
@@ -346,13 +366,10 @@ input:focus, textarea:focus {
   font-weight: 800;
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(192, 132, 252, 0.35);
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease;
 }
 
-#submitBtn:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 10px 24px rgba(192, 132, 252, 0.45);
-}
+#submitBtn:hover { transform: translateY(-1px); }
 
 .message {
   min-height: 20px;
@@ -396,71 +413,4 @@ input:focus, textarea:focus {
   text-align: center;
   color: var(--text-muted2);
   font-size: 12px;
-}
-
-/* 하단 기도 목록 영역 */
-.recent-prayers-section {
-  margin-top: 24px;
-  background: var(--panel-bg);
-  border: 1px solid var(--panel-border);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 20px;
-  padding: 18px 24px;
-  box-shadow: var(--panel-shadow);
-}
-
-.recent-prayer-list {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-}
-
-/* 📌 하단 기도 목록 카드 (16px 기준) */
-.recent-item {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 12px 18px;
-  font-size: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
-}
-
-.recent-name {
-  font-weight: 800;
-  color: #0f172a;
-  white-space: nowrap;
-  background: #f1f5f9;
-  padding: 4px 12px;
-  border-radius: 8px;
-  font-size: 15px;
-}
-
-.recent-text {
-  font-family: "Noto Sans KR", sans-serif;
-  color: #1e293b;
-  font-weight: 500;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  flex: 1;
-  font-size: 16px;
-}
-
-.recent-empty {
-  grid-column: span 2;
-  text-align: center;
-  color: var(--text-muted2);
-  padding: 16px;
-  font-size: 15px;
-}
-
-@media (max-width: 900px) {
-  .display-grid { grid-template-columns: 1fr !important; }
-  .prayer-card { padding: 24px; min-height: auto; }
-  .prayer-text { font-size: 18px !important; }
-  .recent-prayer-list { grid-template-columns: 1fr; }
 }

@@ -1,14 +1,10 @@
 const socket = io();
 let prayers = [];
-let lastId = null;
 
-const prayerText = document.getElementById("prayerText");
-const prayerName = document.getElementById("prayerName");
 const counter = document.getElementById("counter");
 const recentPrayerList = document.getElementById("recentPrayerList");
 
 const qrCard = document.getElementById("qrCard");
-const displayGrid = document.getElementById("displayGrid");
 const qrToggleBtn = document.getElementById("qrToggleBtn");
 const zoomIcon = document.getElementById("zoomIcon");
 
@@ -24,12 +20,10 @@ fetch("/api/qr")
 if (qrToggleBtn) {
   qrToggleBtn.addEventListener("click", () => {
     const isMinimized = qrCard.classList.toggle("minimized");
-    displayGrid.classList.toggle("qr-minimized", isMinimized);
-
     if (isMinimized) {
-      zoomIcon.textContent = "🔍 +"; // 축소 시 확대 아이콘 표시
+      zoomIcon.textContent = "🔍 +";
     } else {
-      zoomIcon.textContent = "🔍 −"; // 기본 시 축소 아이콘 표시
+      zoomIcon.textContent = "🔍 −";
     }
   });
 }
@@ -49,8 +43,8 @@ function updateCounter() {
   }
 }
 
-// 최근 기도 목록 렌더링
-function renderRecentPrayers() {
+// 기도 목록 렌더링 (최신순 10개)
+function renderPrayers() {
   if (!recentPrayerList) return;
   
   if (!prayers || !prayers.length) {
@@ -58,63 +52,36 @@ function renderRecentPrayers() {
     return;
   }
 
-  const recent10 = [...prayers].reverse().slice(0, 10);
+  // 최신순 정렬
+  const recentList = [...prayers].reverse();
 
-  recentPrayerList.innerHTML = recent10.map(prayer => {
+  recentPrayerList.innerHTML = recentList.map(prayer => {
     const displayName = prayer.name && prayer.name !== "익명" ? escapeHtml(prayer.name) : "익명";
     return `
       <div class="recent-item">
         <span class="recent-name">${displayName}</span>
-        <span class="recent-text">${escapeHtml(prayer.text)}</span>
+        <div class="recent-text">${escapeHtml(prayer.text)}</div>
       </div>
     `;
   }).join("");
 }
 
-function showRandomPrayer() {
-  renderRecentPrayers();
-
-  if (!prayers.length) {
-    prayerText.textContent = "기도제목을 기다리고 있습니다.";
-    prayerName.textContent = "";
-    updateCounter();
-    return;
-  }
-
-  let pool = prayers;
-  if (prayers.length > 1 && lastId !== null) {
-    pool = prayers.filter(p => p.id !== lastId);
-  }
-
-  const prayer = pool[Math.floor(Math.random() * pool.length)];
-  lastId = prayer.id;
-
-  prayerText.classList.remove("show");
-  setTimeout(() => {
-    prayerText.textContent = prayer.text;
-    prayerName.textContent = prayer.name === "익명" ? "— 익명" : `— ${prayer.name}`;
-    prayerText.classList.add("show");
-    updateCounter();
-  }, 180);
-}
-
+// Socket.io 이벤트
 socket.on("prayer:init", list => {
   prayers = list || [];
   updateCounter();
-  showRandomPrayer();
+  renderPrayers();
 });
 
 socket.on("prayer:new", prayer => {
   prayers.push(prayer);
   if (prayers.length > 100) prayers = prayers.slice(-100);
   updateCounter();
-  showRandomPrayer();
+  renderPrayers();
 });
 
 socket.on("prayer:clear", () => {
   prayers = [];
-  lastId = null;
-  showRandomPrayer();
+  updateCounter();
+  renderPrayers();
 });
-
-setInterval(showRandomPrayer, 8000);

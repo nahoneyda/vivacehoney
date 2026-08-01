@@ -14,8 +14,8 @@
       <p>QR코드를 찍고 기도제목을 남겨 주세요.<br>등록된 기도제목이 화면에 함께 나눠집니다.</p>
     </section>
 
-    <section id="displayGrid" class="display-grid">
-      <!-- QR 카드 영역 -->
+    <!-- QR 카드 영역 -->
+    <section class="qr-section">
       <div id="qrCard" class="qr-card">
         <button id="qrToggleBtn" class="qr-toggle-btn" type="button" title="QR 코드 축소/확대">
           <span id="zoomIcon">🔍 −</span>
@@ -27,18 +27,13 @@
           <div class="qr-label">휴대폰 카메라로 QR을 스캔하세요</div>
         </div>
       </div>
-
-      <!-- 기도제목 카드 -->
-      <div class="prayer-card">
-        <div class="prayer-label">지금 함께 기도할 제목</div>
-        <div id="prayerText" class="prayer-text">기도제목을 기다리고 있습니다.</div>
-        <div id="prayerName" class="prayer-name"></div>
-        <div id="counter" class="counter">등록 0건</div>
-      </div>
     </section>
 
-    <!-- 하단 최근 기도 목록 (제목 영역 제거) -->
+    <!-- 전체 기도 목록 (가로 스크롤 없음, 자동 줄바꿈) -->
     <section class="recent-prayers-section">
+      <div class="recent-header">
+        <span id="counter" class="counter-badge">등록 0건</span>
+      </div>
       <div id="recentPrayerList" class="recent-prayer-list">
         <!-- 스크립트에서 자동 생성 -->
       </div>
