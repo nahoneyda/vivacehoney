@@ -508,4 +508,59 @@ textarea:focus {
   transform: translateY(-1px);
 }
 
+
+.qr-card {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+/* 돋보기 토글 버튼 디자인 */
+.qr-toggle-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.9);
+  color: #1e293b;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 6px 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.qr-toggle-btn:hover {
+  background: #ffffff;
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+  transform: scale(1.05);
+}
+
+/* 돋보기 버튼을 눌러 QR 카드가 축소되었을 때 스타일 */
+.display-grid.qr-minimized {
+  grid-template-columns: 220px 1fr; /* QR 그리드 영역을 360px -> 220px로 단축 */
+}
+
+.qr-card.minimized {
+  padding: 16px 12px;
+}
+
+.qr-card.minimized img {
+  max-width: 140px; /* QR 이미지 크기를 대폭 축소 */
+  padding: 6px;
+}
+
+.qr-card.minimized .url {
+  font-size: 11px;
+  margin-top: 6px;
+}
+
+.qr-card.minimized .qr-label {
+  font-size: 12px;
+  margin-top: 4px;
+}
+
 }

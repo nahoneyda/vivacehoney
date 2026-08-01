@@ -7,6 +7,11 @@ const prayerName = document.getElementById("prayerName");
 const counter = document.getElementById("counter");
 const recentPrayerList = document.getElementById("recentPrayerList");
 
+const qrCard = document.getElementById("qrCard");
+const displayGrid = document.getElementById("displayGrid");
+const qrToggleBtn = document.getElementById("qrToggleBtn");
+const zoomIcon = document.getElementById("zoomIcon");
+
 // QR 코드 생성
 fetch("/api/qr")
   .then(r => r.json())
@@ -14,6 +19,20 @@ fetch("/api/qr")
     document.getElementById("qr").src = data.dataUrl;
     document.getElementById("prayUrl").textContent = data.url;
   });
+
+// 🔍 QR 코드 확대/축소 토글 기능
+if (qrToggleBtn) {
+  qrToggleBtn.addEventListener("click", () => {
+    const isMinimized = qrCard.classList.toggle("minimized");
+    displayGrid.classList.toggle("qr-minimized", isMinimized);
+
+    if (isMinimized) {
+      zoomIcon.textContent = "🔍 +"; // 축소 상태일 때는 확대 아이콘 표시
+    } else {
+      zoomIcon.textContent = "🔍 −"; // 기본 상태일 때는 축소 아이콘 표시
+    }
+  });
+}
 
 function escapeHtml(value) {
   return String(value ?? "")
@@ -30,7 +49,7 @@ function updateCounter() {
   }
 }
 
-// 🔥 하단 최근 기도 목록 10개 렌더링 함수
+// 하단 최근 기도 목록 렌더링
 function renderRecentPrayers() {
   if (!recentPrayerList) return;
   
@@ -39,7 +58,6 @@ function renderRecentPrayers() {
     return;
   }
 
-  // 최신순으로 상위 10개 추출
   const recent10 = [...prayers].reverse().slice(0, 10);
 
   recentPrayerList.innerHTML = recent10.map(prayer => {
@@ -54,7 +72,7 @@ function renderRecentPrayers() {
 }
 
 function showRandomPrayer() {
-  renderRecentPrayers(); // 최근 목록 업데이트
+  renderRecentPrayers();
 
   if (!prayers.length) {
     prayerText.textContent = "기도제목을 기다리고 있습니다.";
@@ -80,7 +98,6 @@ function showRandomPrayer() {
   }, 180);
 }
 
-// 실시간 데이터 수신 이벤트
 socket.on("prayer:init", list => {
   prayers = list || [];
   updateCounter();
