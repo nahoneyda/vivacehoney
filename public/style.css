@@ -36,7 +36,7 @@ body {
   background-attachment: fixed;
 }
 
-/* SCREEN (메인 대형 스크린 / index.html) */
+/* SCREEN (메인 대형 스크린) */
 .screen {
   min-height: 100vh;
   display: flex;
@@ -131,7 +131,7 @@ body {
   color: var(--text-main);
 }
 
-/* 🔍 돋보기 축소/확대 버튼 디자인 */
+/* 🔍 돋보기 버튼 */
 .qr-toggle-btn {
   position: absolute;
   top: 12px;
@@ -156,7 +156,7 @@ body {
   transform: scale(1.05);
 }
 
-/* QR 축소 되었을 때 (minimized) 스타일 */
+/* 🔍 QR 축소 상태 적용 */
 .display-grid.qr-minimized {
   grid-template-columns: 200px 1fr !important;
 }
@@ -172,7 +172,12 @@ body {
 
 .qr-card.minimized .url,
 .qr-card.minimized .qr-label {
-  display: none; /* 축소 시 텍스트 숨김으로 깔끔하게 정리 */
+  display: none;
+}
+
+/* 🔥 QR 축소 시 오른쪽 기도제목 글씨 크기 단정하게 축소 */
+.display-grid.qr-minimized .prayer-text {
+  font-size: clamp(22px, 2.4vw, 36px) !important;
 }
 
 /* 기도 제목 카드 */
@@ -200,7 +205,7 @@ body {
   word-break: keep-all;
   opacity: 0.25;
   transform: translateY(6px);
-  transition: opacity 0.35s ease, transform 0.35s ease;
+  transition: opacity 0.35s ease, transform 0.35s ease, font-size 0.3s ease;
 }
 
 .prayer-text.show {
@@ -360,7 +365,6 @@ input:focus, textarea:focus {
 .message.ok { color: #10b981; }
 .message.error { color: #ef4444; }
 
-/* 🏠 홈 화면 이동 버튼 스타일 */
 .home-btn-wrap {
   margin-top: 16px;
   text-align: center;
@@ -394,7 +398,7 @@ input:focus, textarea:focus {
   font-size: 12px;
 }
 
-/* 하단 최근 기도 목록 */
+/* 🔥 하단 기도 목록 영역 (제목 보더 제거 및 여백 정리) */
 .recent-prayers-section {
   margin-top: 24px;
   background: var(--panel-bg);
@@ -406,45 +410,23 @@ input:focus, textarea:focus {
   box-shadow: var(--panel-shadow);
 }
 
-.recent-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.recent-header h3 {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 800;
-  color: #1e293b;
-}
-
-.recent-badge {
-  font-size: 12px;
-  font-weight: 700;
-  color: var(--accent-gold);
-  background: rgba(197, 155, 39, 0.1);
-  padding: 3px 10px;
-  border-radius: 12px;
-}
-
 .recent-prayer-list {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
+  gap: 12px;
 }
 
+/* 🔥 하단 기도 카드 가독성 개선 (폰트 확대 & 가독성 향상) */
 .recent-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 14px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+  border-radius: 12px;
+  padding: 12px 18px;
+  font-size: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 .recent-name {
@@ -452,25 +434,27 @@ input:focus, textarea:focus {
   color: #0f172a;
   white-space: nowrap;
   background: #f1f5f9;
-  padding: 2px 8px;
-  border-radius: 6px;
-  font-size: 13px;
+  padding: 4px 12px;
+  border-radius: 8px;
+  font-size: 15px;
 }
 
 .recent-text {
-  color: #334155;
+  color: #1e293b;
+  font-weight: 600;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   flex: 1;
+  font-size: 16px;
 }
 
 .recent-empty {
   grid-column: span 2;
   text-align: center;
   color: var(--text-muted2);
-  padding: 12px;
-  font-size: 14px;
+  padding: 16px;
+  font-size: 15px;
 }
 
 @media (max-width: 900px) {
