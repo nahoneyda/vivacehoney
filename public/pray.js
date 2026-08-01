@@ -1,143 +1,80 @@
-const form = document.getElementById("form");
-const text = document.getElementById("text");
-const nameInput = document.getElementById("name");
-const count = document.getElementById("count");
-const message = document.getElementById("message");
-const submitBtn = document.getElementById("submitBtn");
-const prayerList = document.getElementById("prayerList");
-const refreshPrayers = document.getElementById("refreshPrayers");
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>옥토 기도 나눔</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
 
-let prayers = [];
-const socket = typeof io === "function" ? io() : null;
+<body class="mobile">
 
-text.addEventListener("input", () => {
-  count.textContent = text.value.length;
-});
+  <main class="mobile-wrap">
 
-function shuffle(items) {
-  const copy = [...items];
-  for (let i = copy.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [copy[i], copy[j]] = [copy[j], copy[i]];
-  }
-  return copy;
-}
+    <div class="share-header">
+      <div class="eyebrow">PRAYER TOGETHER</div>
 
-function escapeHtml(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
+      <h1>
+        옥토 기도 나눔
+        <span class="pray-symbol">🙏</span>
+      </h1>
 
-function timeAgo(dateString) {
-  const date = new Date(dateString);
-  if (Number.isNaN(date.getTime())) return "";
-  const minutes = Math.max(0, Math.floor((Date.now() - date.getTime()) / 60000));
-  if (minutes < 1) return "방금 전";
-  if (minutes < 60) return `${minutes}분 전`;
-  const hours = Math.floor(minutes / 60);
-  if (hours < 24) return `${hours}시간 전`;
-  const days = Math.floor(hours / 24);
-  if (days < 30) return `${days}일 전`;
-  return `${Math.floor(days / 30)}개월 전`;
-}
+      <p class="intro">
+        함께 기도하면 하나님이 들으십니다.<br>
+        기도제목을 나누고 서로를 위해 기도해주세요.
+      </p>
+    </div>
 
-function renderRandomPrayers() {
-  if (!prayers.length) {
-    prayerList.innerHTML = '<div class="prayer-list-empty">아직 나눠진 기도제목이 없습니다.<br>첫 기도제목을 나눠 주세요.</div>';
-    return;
-  }
+    <form id="form" class="form-card compact-form">
 
-  const selected = shuffle(prayers).slice(0, 10);
-  prayerList.innerHTML = selected.map((prayer) => {
-    const displayName = prayer.name && prayer.name !== "익명" ? escapeHtml(prayer.name) : "익명";
-    return `
-      <article class="shared-prayer-item">
-        <div class="prayer-avatar" aria-hidden="true">●</div>
-        <div class="shared-prayer-content">
-          <div class="shared-prayer-meta">
-            <strong>${displayName}</strong>
-            <span>· ${escapeHtml(timeAgo(prayer.createdAt))}</span>
-          </div>
-          <p>${escapeHtml(prayer.text)}</p>
+      <label for="name">
+        이름 <span>(선택)</span>
+      </label>
+
+      <input
+        id="name"
+        maxlength="30"
+        placeholder="익명으로 남겨도 됩니다">
+
+      <label for="text">
+        기도제목
+      </label>
+
+      <div class="textarea-wrap">
+        <textarea
+          id="text"
+          maxlength="300"
+          required
+          placeholder="예: 가족의 건강과 회복을 위해 기도해 주세요."></textarea>
+
+        <div class="char">
+          <span id="count">0</span>/300
         </div>
-        <div class="shared-prayer-icon" aria-label="함께 기도합니다">🙏</div>
-      </article>
-    `;
-  }).join("");
-}
+      </div>
 
-async function loadPrayers() {
-  prayerList.classList.add("loading");
-  try {
-    const res = await fetch("/api/prayers", { cache: "no-store" });
-    if (!res.ok) throw new Error("기도제목을 불러오지 못했습니다.");
-    const data = await res.json();
-    prayers = Array.isArray(data) ? data : [];
-    renderRandomPrayers();
-  } catch (err) {
-    prayerList.innerHTML = `<div class="prayer-list-empty error-text">${escapeHtml(err.message)}</div>`;
-  } finally {
-    prayerList.classList.remove("loading");
-  }
-}
+      <button id="submitBtn" type="submit">
+        기도제목 나누기
+      </button>
 
-refreshPrayers.addEventListener("click", () => {
-  refreshPrayers.classList.add("spin");
-  renderRandomPrayers();
-  setTimeout(() => refreshPrayers.classList.remove("spin"), 450);
-});
+      <div id="message" class="message"></div>
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  message.textContent = "";
-  message.className = "message";
-  submitBtn.disabled = true;
-  submitBtn.textContent = "등록 중...";
+    </form>
 
-  try {
-    const res = await fetch("/api/prayers", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name: nameInput.value, text: text.value })
-    });
+    <!-- 홈 화면 이동 버튼 -->
+    <div class="home-btn-wrap">
+      <a href="/" class="home-btn">
+        🏠 "함께 기도해요" 홈 화면으로 이동
+      </a>
+    </div>
 
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || "전송에 실패했습니다.");
+    <p class="privacy">
+      개인정보·연락처·민감한 정보는 입력하지 않는 것을 권장합니다.
+    </p>
 
-    text.value = "";
-    count.textContent = "0";
-    message.textContent = "기도제목이 등록되었습니다. 함께 기도하겠습니다.";
-    message.className = "message ok";
+  </main>
 
-    if (data.prayer && !prayers.some((p) => p.id === data.prayer.id)) {
-      prayers.push(data.prayer);
-    }
-    renderRandomPrayers();
-  } catch (err) {
-    message.textContent = err.message;
-    message.className = "message error";
-  } finally {
-    submitBtn.disabled = false;
-    submitBtn.innerHTML = '기도제목 나누기 <span aria-hidden="true">✈</span>';
-  }
-});
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/pray.js"></script>
 
-if (socket) {
-  socket.on("prayer:new", (prayer) => {
-    if (!prayer || prayers.some((p) => p.id === prayer.id)) return;
-    prayers.push(prayer);
-    if (prayers.length > 100) prayers = prayers.slice(-100);
-    renderRandomPrayers();
-  });
-
-  socket.on("prayer:clear", () => {
-    prayers = [];
-    renderRandomPrayers();
-  });
-}
-
-loadPrayers();
+</body>
+</html>

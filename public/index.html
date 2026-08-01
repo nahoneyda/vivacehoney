@@ -4,8 +4,6 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>함께 기도해요</title>
-  
-  <!-- CSS 스타일 연결 -->
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body class="screen">
@@ -16,13 +14,21 @@
       <p>QR코드를 찍고 기도제목을 남겨 주세요.<br>등록된 기도제목이 화면에 함께 나눠집니다.</p>
     </section>
 
-    <section class="display-grid">
-      <div class="qr-card">
-        <img id="qr" alt="기도제목 입력 QR코드" />
-        <div id="prayUrl" class="url"></div>
-        <div class="qr-label">휴대폰 카메라로 QR을 스캔하세요</div>
+    <section id="displayGrid" class="display-grid">
+      <!-- QR 카드 영역 -->
+      <div id="qrCard" class="qr-card">
+        <button id="qrToggleBtn" class="qr-toggle-btn" type="button" title="QR 코드 축소/확대">
+          <span id="zoomIcon">🔍 −</span>
+        </button>
+
+        <div class="qr-body">
+          <img id="qr" alt="기도제목 입력 QR코드" />
+          <div id="prayUrl" class="url"></div>
+          <div class="qr-label">휴대폰 카메라로 QR을 스캔하세요</div>
+        </div>
       </div>
 
+      <!-- 기도제목 표시 카드 -->
       <div class="prayer-card">
         <div class="prayer-label">지금 함께 기도할 제목</div>
         <div id="prayerText" class="prayer-text">기도제목을 기다리고 있습니다.</div>

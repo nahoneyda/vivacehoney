@@ -563,4 +563,86 @@ textarea:focus {
   margin-top: 4px;
 }
 
+
+.home-btn-wrap {
+  margin-top: 16px;
+  text-align: center;
+}
+
+.home-btn {
+  display: block;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--panel-border);
+  color: var(--text-main);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none;
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.12);
+  transition: all 0.2s ease;
+}
+
+.home-btn:hover {
+  background: #ffffff;
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+/* ----------------------------------------------------
+   QR TOGGLE & MINIMIZE (돋보기 축소/확대 기능)
+---------------------------------------------------- */
+.qr-card {
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.qr-toggle-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  border: 1px solid var(--panel-border);
+  background: rgba(255, 255, 255, 0.95);
+  color: #1e293b;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.qr-toggle-btn:hover {
+  background: #ffffff;
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
+}
+
+/* 돋보기 눌러 축소되었을 때 */
+.display-grid.qr-minimized {
+  grid-template-columns: 220px 1fr;
+}
+
+.qr-card.minimized {
+  padding: 16px 10px;
+}
+
+.qr-card.minimized img {
+  max-width: 130px;
+  padding: 4px;
+}
+
+.qr-card.minimized .url {
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.qr-card.minimized .qr-label {
+  font-size: 11px;
+  margin-top: 2px;
+}
+
 }
