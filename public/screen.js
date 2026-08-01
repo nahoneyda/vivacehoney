@@ -20,16 +20,16 @@ fetch("/api/qr")
     document.getElementById("prayUrl").textContent = data.url;
   });
 
-// 🔍 QR 코드 확대/축소 토글 기능
+// 🔍 QR 코드 확대/축소 토글 이벤트
 if (qrToggleBtn) {
   qrToggleBtn.addEventListener("click", () => {
     const isMinimized = qrCard.classList.toggle("minimized");
     displayGrid.classList.toggle("qr-minimized", isMinimized);
 
     if (isMinimized) {
-      zoomIcon.textContent = "🔍 +"; // 축소 상태일 때는 확대 아이콘 표시
+      zoomIcon.textContent = "🔍 +"; // 축소 시 확대 아이콘 표시
     } else {
-      zoomIcon.textContent = "🔍 −"; // 기본 상태일 때는 축소 아이콘 표시
+      zoomIcon.textContent = "🔍 −"; // 기본 시 축소 아이콘 표시
     }
   });
 }
@@ -49,7 +49,7 @@ function updateCounter() {
   }
 }
 
-// 하단 최근 기도 목록 렌더링
+// 최근 기도 목록 렌더링
 function renderRecentPrayers() {
   if (!recentPrayerList) return;
   

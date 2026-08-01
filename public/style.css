@@ -1,5 +1,4 @@
 :root {
-  /* 밝고 화사한 모던 테마 색상 정의 */
   --bg-gradient: linear-gradient(135deg, #fdfbf7 0%, #f4f6fb 50%, #f3effe 100%);
   --panel-bg: rgba(255, 255, 255, 0.88);
   --panel-border: rgba(226, 232, 240, 0.8);
@@ -24,19 +23,11 @@
   box-sizing: border-box;
 }
 
-html,
-body {
+html, body {
   margin: 0;
   padding: 0;
   min-height: 100%;
-  font-family:
-    Pretendard,
-    "Noto Sans KR",
-    system-ui,
-    -apple-system,
-    BlinkMacSystemFont,
-    "Segoe UI",
-    sans-serif;
+  font-family: Pretendard, "Noto Sans KR", system-ui, -apple-system, sans-serif;
 }
 
 body {
@@ -45,10 +36,7 @@ body {
   background-attachment: fixed;
 }
 
-/* ----------------------------------------------------
-   SCREEN (메인 대형 스크린 / index.html)
----------------------------------------------------- */
-
+/* SCREEN (메인 대형 스크린 / index.html) */
 .screen {
   min-height: 100vh;
   display: flex;
@@ -94,11 +82,10 @@ body {
   grid-template-columns: 360px 1fr;
   gap: 24px;
   align-items: stretch;
+  transition: grid-template-columns 0.3s ease;
 }
 
-.qr-card,
-.prayer-card,
-.form-card {
+.qr-card, .prayer-card, .form-card {
   border: 1px solid var(--panel-border);
   background: var(--panel-bg);
   backdrop-filter: blur(20px);
@@ -115,6 +102,8 @@ body {
   justify-content: center;
   align-items: center;
   border-top: 4px solid var(--accent-gold);
+  position: relative;
+  transition: all 0.3s ease;
 }
 
 .qr-card img {
@@ -125,6 +114,7 @@ body {
   border-radius: 16px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  transition: all 0.3s ease;
 }
 
 .url {
@@ -141,6 +131,51 @@ body {
   color: var(--text-main);
 }
 
+/* 🔍 돋보기 축소/확대 버튼 디자인 */
+.qr-toggle-btn {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 10;
+  border: 1px solid var(--panel-border);
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 13px;
+  font-weight: 800;
+  padding: 6px 14px;
+  border-radius: 20px;
+  cursor: pointer;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  transition: all 0.2s ease;
+}
+
+.qr-toggle-btn:hover {
+  background: var(--accent-gold);
+  color: #ffffff;
+  border-color: var(--accent-gold);
+  transform: scale(1.05);
+}
+
+/* QR 축소 되었을 때 (minimized) 스타일 */
+.display-grid.qr-minimized {
+  grid-template-columns: 200px 1fr !important;
+}
+
+.qr-card.minimized {
+  padding: 16px 8px;
+}
+
+.qr-card.minimized img {
+  max-width: 120px !important;
+  padding: 4px;
+}
+
+.qr-card.minimized .url,
+.qr-card.minimized .qr-label {
+  display: none; /* 축소 시 텍스트 숨김으로 깔끔하게 정리 */
+}
+
+/* 기도 제목 카드 */
 .prayer-card {
   min-height: 380px;
   padding: 36px 44px;
@@ -163,7 +198,6 @@ body {
   font-weight: 800;
   color: #0f172a;
   word-break: keep-all;
-
   opacity: 0.25;
   transform: translateY(6px);
   transition: opacity 0.35s ease, transform 0.35s ease;
@@ -189,10 +223,7 @@ body {
   font-weight: 600;
 }
 
-/* ----------------------------------------------------
-   MOBILE (기도 입력 폼 / pray.html)
----------------------------------------------------- */
-
+/* MOBILE (기도 입력 폼 / pray.html) */
 .mobile {
   min-height: 100vh;
 }
@@ -251,8 +282,7 @@ label span {
   font-size: 13px;
 }
 
-input,
-textarea {
+input, textarea {
   width: 100%;
   border: 1px solid var(--input-border);
   background: var(--input-bg);
@@ -277,13 +307,11 @@ textarea {
   line-height: 1.6;
 }
 
-input::placeholder,
-textarea::placeholder {
+input::placeholder, textarea::placeholder {
   color: #a0aec0;
 }
 
-input:focus,
-textarea:focus {
+input:focus, textarea:focus {
   border-color: var(--input-focus);
   background: #ffffff;
   box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
@@ -321,10 +349,6 @@ textarea:focus {
   box-shadow: 0 10px 24px rgba(192, 132, 252, 0.45);
 }
 
-#submitBtn:disabled {
-  opacity: 0.65;
-}
-
 .message {
   min-height: 20px;
   margin-top: 8px;
@@ -333,12 +357,34 @@ textarea:focus {
   font-size: 14px;
 }
 
-.message.ok {
-  color: #10b981;
+.message.ok { color: #10b981; }
+.message.error { color: #ef4444; }
+
+/* 🏠 홈 화면 이동 버튼 스타일 */
+.home-btn-wrap {
+  margin-top: 16px;
+  text-align: center;
 }
 
-.message.error {
-  color: #ef4444;
+.home-btn {
+  display: block;
+  width: 100%;
+  padding: 14px 18px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--panel-border);
+  color: var(--text-main);
+  font-size: 15px;
+  font-weight: 700;
+  text-decoration: none !important;
+  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.12);
+  transition: all 0.2s ease;
+}
+
+.home-btn:hover {
+  background: #ffffff;
+  border-color: var(--accent-gold);
+  color: var(--accent-gold);
 }
 
 .privacy {
@@ -348,10 +394,7 @@ textarea:focus {
   font-size: 12px;
 }
 
-/* ----------------------------------------------------
-   HA-DAN RECENT PRAYERS (하단 최근 기도 목록 10개)
----------------------------------------------------- */
-
+/* 하단 최근 기도 목록 */
 .recent-prayers-section {
   margin-top: 24px;
   background: var(--panel-bg);
@@ -430,219 +473,9 @@ textarea:focus {
   font-size: 14px;
 }
 
-/* ----------------------------------------------------
-   RESPONSIVE (반응형)
----------------------------------------------------- */
-
 @media (max-width: 900px) {
-  .display-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .prayer-card {
-    padding: 24px;
-    min-height: auto;
-  }
-
-  .prayer-text {
-    font-size: 26px;
-  }
-
-  .recent-prayer-list {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 520px) {
-  .mobile-wrap {
-    width: min(100% - 20px, 600px);
-    padding-top: 8px;
-  }
-
-  .share-header h1 {
-    font-size: 32px;
-  }
-
-  .intro {
-    font-size: 14px;
-  }
-
-  textarea {
-    min-height: 130px;
-  }
-
-  #submitBtn {
-    font-size: 16px;
-    padding: 12px;
-  }
-
-
-/* ----------------------------------------------------
-   HOME BUTTON (홈 화면 이동 버튼)
----------------------------------------------------- */
-
-.home-btn-wrap {
-  margin-top: 16px;
-  text-align: center;
-}
-
-.home-btn {
-  display: inline-block;
-  width: 100%;
-  padding: 12px 18px;
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.8);
-  border: 1px solid var(--panel-border);
-  color: var(--text-main);
-  font-size: 15px;
-  font-weight: 700;
-  text-decoration: none;
-  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
-  transition: all 0.2s ease;
-}
-
-.home-btn:hover {
-  background: #ffffff;
-  border-color: var(--accent-gold);
-  color: var(--accent-gold);
-  transform: translateY(-1px);
-}
-
-
-.qr-card {
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-/* 돋보기 토글 버튼 디자인 */
-.qr-toggle-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 10;
-  border: 1px solid var(--panel-border);
-  background: rgba(255, 255, 255, 0.9);
-  color: #1e293b;
-  font-size: 13px;
-  font-weight: 800;
-  padding: 6px 10px;
-  border-radius: 20px;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: all 0.2s ease;
-}
-
-.qr-toggle-btn:hover {
-  background: #ffffff;
-  border-color: var(--accent-gold);
-  color: var(--accent-gold);
-  transform: scale(1.05);
-}
-
-/* 돋보기 버튼을 눌러 QR 카드가 축소되었을 때 스타일 */
-.display-grid.qr-minimized {
-  grid-template-columns: 220px 1fr; /* QR 그리드 영역을 360px -> 220px로 단축 */
-}
-
-.qr-card.minimized {
-  padding: 16px 12px;
-}
-
-.qr-card.minimized img {
-  max-width: 140px; /* QR 이미지 크기를 대폭 축소 */
-  padding: 6px;
-}
-
-.qr-card.minimized .url {
-  font-size: 11px;
-  margin-top: 6px;
-}
-
-.qr-card.minimized .qr-label {
-  font-size: 12px;
-  margin-top: 4px;
-}
-
-
-.home-btn-wrap {
-  margin-top: 16px;
-  text-align: center;
-}
-
-.home-btn {
-  display: block;
-  width: 100%;
-  padding: 14px 18px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--panel-border);
-  color: var(--text-main);
-  font-size: 15px;
-  font-weight: 700;
-  text-decoration: none;
-  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.12);
-  transition: all 0.2s ease;
-}
-
-.home-btn:hover {
-  background: #ffffff;
-  border-color: var(--accent-gold);
-  color: var(--accent-gold);
-}
-
-/* ----------------------------------------------------
-   QR TOGGLE & MINIMIZE (돋보기 축소/확대 기능)
----------------------------------------------------- */
-.qr-card {
-  position: relative;
-  transition: all 0.3s ease;
-}
-
-.qr-toggle-btn {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 10;
-  border: 1px solid var(--panel-border);
-  background: rgba(255, 255, 255, 0.95);
-  color: #1e293b;
-  font-size: 13px;
-  font-weight: 800;
-  padding: 6px 12px;
-  border-radius: 20px;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  transition: all 0.2s ease;
-}
-
-.qr-toggle-btn:hover {
-  background: #ffffff;
-  border-color: var(--accent-gold);
-  color: var(--accent-gold);
-}
-
-/* 돋보기 눌러 축소되었을 때 */
-.display-grid.qr-minimized {
-  grid-template-columns: 220px 1fr;
-}
-
-.qr-card.minimized {
-  padding: 16px 10px;
-}
-
-.qr-card.minimized img {
-  max-width: 130px;
-  padding: 4px;
-}
-
-.qr-card.minimized .url {
-  font-size: 11px;
-  margin-top: 4px;
-}
-
-.qr-card.minimized .qr-label {
-  font-size: 11px;
-  margin-top: 2px;
-}
-
+  .display-grid { grid-template-columns: 1fr !important; }
+  .prayer-card { padding: 24px; min-height: auto; }
+  .prayer-text { font-size: 26px; }
+  .recent-prayer-list { grid-template-columns: 1fr; }
 }
