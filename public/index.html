@@ -2,8 +2,10 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>함께 기도해요</title>
+  
+  <!-- CSS 스타일 연결 -->
   <link rel="stylesheet" href="/style.css" />
 </head>
 <body class="screen">
@@ -26,6 +28,17 @@
         <div id="prayerText" class="prayer-text">기도제목을 기다리고 있습니다.</div>
         <div id="prayerName" class="prayer-name"></div>
         <div id="counter" class="counter">등록 0건</div>
+      </div>
+    </section>
+
+    <!-- 하단 최근 기도 목록 10개 -->
+    <section class="recent-prayers-section">
+      <div class="recent-header">
+        <h3>최근 함께 나눈 기도</h3>
+        <span class="recent-badge">최신 10건</span>
+      </div>
+      <div id="recentPrayerList" class="recent-prayer-list">
+        <!-- 스크립트에서 자동 생성 -->
       </div>
     </section>
   </main>

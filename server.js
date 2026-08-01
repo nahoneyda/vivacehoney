@@ -1,216 +1,113 @@
+require("dotenv").config();
 const express = require("express");
 const http = require("http");
-const { Server } = require("socket.io");
-const QRCode = require("qrcode");
 const path = require("path");
+const { Server } = require("socket.io");
 const { createClient } = require("@supabase/supabase-js");
 
 const app = express();
-app.set("trust proxy", 1);
-
-require("dotenv").config();
-
 const server = http.createServer(app);
 const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
-const ADMIN_KEY = process.env.ADMIN_KEY || "change-me";
-const SUPABASE_URL = process.env.SUPABASE_URL;
-const SUPABASE_SECRET_KEY = process.env.SUPABASE_SECRET_KEY;
 
-if (!SUPABASE_URL || !SUPABASE_SECRET_KEY) {
-  console.error("Missing SUPABASE_URL or SUPABASE_SECRET_KEY");
-  process.exit(1);
-}
+// Supabase 클라이언트 초기화
+const supabaseUrl = process.env.SUPABASE_URL;
+// 기존 코드:
+// const supabaseKey = process.env.SUPABASE_KEY;
 
-const supabase = createClient(
-  SUPABASE_URL,
-  SUPABASE_SECRET_KEY,
-  {
-    auth: {
-      persistSession: false,
-      autoRefreshToken: false,
-      detectSessionInUrl: false
-    }
-  }
-);
+// 수정 코드: .env의 SUPABASE_SECRET_KEY 이름을 읽도록 변경
+const supabaseKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_KEY;
+const supabase = createClient(supabaseUrl, supabaseKey);
 
-app.use(express.json({ limit: "32kb" }));
+app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
-function cleanText(value) {
-  return String(value || "")
-    .replace(/[<>]/g, "")
-    .replace(/\s+/g, " ")
-    .trim()
-    .slice(0, 300);
-}
+// 페이지 라우팅
+app.get("/", (req, res) => res.sendFile(path.join(__dirname, "public", "index.html")));
+app.get("/pray", (req, res) => res.sendFile(path.join(__dirname, "public", "pray.html")));
+app.get("/play", (req, res) => res.sendFile(path.join(__dirname, "public", "pray.html")));
 
-function normalizePrayer(row) {
-  return {
-    id: row.id,
-    text: row.text,
-    name: row.name || "익명",
-    createdAt: row.created_at
-  };
-}
-
-async function getRecentPrayers(limit = 100) {
-  const { data, error } = await supabase
-    .from("prayers")
-    .select("id,name,text,created_at")
-    .order("created_at", { ascending: false })
-    .limit(limit);
-
-  if (error) throw error;
-  return (data || []).reverse().map(normalizePrayer);
-}
-
-app.get("/api/health", async (_req, res) => {
+// 1. 전체 기도제목 조회 (GET /api/prayers)
+app.get("/api/prayers", async (req, res) => {
   try {
-    const { count, error } = await supabase
+    const { data, error } = await supabase
       .from("prayers")
-      .select("*", { count: "exact", head: true });
+      .select("*")
+      .order("created_at", { ascending: true }); // 오래된 순 -> 최신순 정렬
 
     if (error) throw error;
-
-    res.json({
-      ok: true,
-      database: "supabase",
-      count: count || 0
-    });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      ok: false,
-      database: "supabase",
-      error: error.message
-    });
+    res.json(data || []);
+  } catch (err) {
+    console.error("Fetch Error:", err);
+    res.status(500).json({ error: "기도제목을 불러오지 못했습니다." });
   }
 });
 
-app.get("/pray", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "pray.html"));
-});
-
-app.get("/api/qr", async (req, res) => {
-  try {
-    const host = req.get("host");
-    const protocol =
-      req.get("x-forwarded-proto") ||
-      req.protocol ||
-      "https";
-
-    const url = `${protocol}://${host}/pray`;
-
-    const dataUrl = await QRCode.toDataURL(url, {
-      width: 520,
-      margin: 1,
-      errorCorrectionLevel: "M"
-    });
-
-    res.json({ url, dataUrl });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: "QR generation failed" });
-  }
-});
-
-app.get("/api/prayers", async (_req, res) => {
-  try {
-    const prayers = await getRecentPrayers(100);
-    res.json(prayers);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      error: "기도제목을 불러오지 못했습니다."
-    });
-  }
-});
-
+// 2. 새 기도제목 등록 (POST /api/prayers)
 app.post("/api/prayers", async (req, res) => {
-  const text = cleanText(req.body?.text);
-  const name = cleanText(req.body?.name).slice(0, 30);
+  const { name, text } = req.body;
 
-  if (!text) {
-    return res.status(400).json({
-      error: "기도제목을 입력해 주세요."
-    });
+  if (!text || !text.trim()) {
+    return res.status(400).json({ error: "기도제목을 입력해 주세요." });
   }
+
+  // DB에 넣을 데이터 (created_at과 id는 DB default 값 적용)
+  const insertData = {
+    name: name && name.trim() ? name.trim() : "익명",
+    text: text.trim()
+  };
 
   try {
     const { data, error } = await supabase
       .from("prayers")
-      .insert({
-        text,
-        name: name || "익명"
-      })
-      .select("id,name,text,created_at")
+      .insert([insertData])
+      .select()
       .single();
 
     if (error) throw error;
 
-    const prayer = normalizePrayer(data);
-
-    io.emit("prayer:new", prayer);
-
-    res.status(201).json({
-      ok: true,
-      prayer
-    });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      error: "기도제목 저장에 실패했습니다."
-    });
+    // 소켓 연결된 클라이언트들에게 즉시 실시간 데이터 전송
+    io.emit("prayer:new", data);
+    res.json({ success: true, prayer: data });
+  } catch (err) {
+    console.error("Insert Error:", err);
+    res.status(500).json({ error: "기도제목 저장에 실패했습니다." });
   }
 });
 
-app.post("/api/admin/clear", async (req, res) => {
-  const key = req.get("x-admin-key");
+// 3. QR 코드 생성 API
+app.get("/api/qr", (req, res) => {
+  const host = req.get("host");
+  const protocol = req.protocol;
+  const prayUrl = `${protocol}://${host}/pray`;
+  const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=${encodeURIComponent(prayUrl)}`;
+  res.json({ dataUrl: qrApiUrl, url: prayUrl });
+});
 
-  if (key !== ADMIN_KEY) {
-    return res.status(401).json({
-      error: "Unauthorized"
-    });
-  }
-
+// 4. Socket.io 접속 시 초기 데이터 발송
+io.on("connection", async (socket) => {
   try {
-    const { error } = await supabase
+    const { data } = await supabase
       .from("prayers")
-      .delete()
-      .gte("id", 0);
-
-    if (error) throw error;
-
-    io.emit("prayer:clear");
-
-    res.json({
-      ok: true
-    });
-  } catch (error) {
-    console.error(error);
-
-    res.status(500).json({
-      error: "전체 삭제에 실패했습니다."
-    });
+      .select("*")
+      .order("created_at", { ascending: true });
+    socket.emit("prayer:init", data || []);
+  } catch (err) {
+    console.error("Socket Init Error:", err);
   }
 });
 
-io.on("connection", async socket => {
-  try {
-    const prayers = await getRecentPrayers(100);
-    socket.emit("prayer:init", prayers);
-  } catch (error) {
-    console.error("Socket init failed:", error);
-    socket.emit("prayer:init", []);
-  }
+// 예외 처리 핸들러
+process.on("uncaughtException", (err) => {
+  console.error("Uncaught Exception Error:", err);
 });
 
-server.listen(PORT, "0.0.0.0", () => {
-  console.log(
-    `Church Prayer Live v1.1 running on port ${PORT}`
-  );
+// 서버 대기 시작
+server.listen(PORT, () => {
+  console.log(`========================================`);
+  console.log(`🚀 Supabase DB 연동 서버 실행 완료!`);
+  console.log(`👉 메인 화면: http://localhost:${PORT}`);
+  console.log(`👉 기도 입력: http://localhost:${PORT}/pray`);
+  console.log(`========================================`);
 });
