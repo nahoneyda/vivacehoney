@@ -1,24 +1,26 @@
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;800;900&display=swap');
 
+/* ==========================================================================
+   지정 3색 미니멀 컬러 팔레트 시스템
+   ========================================================================== */
 :root {
-  --bg-gradient: linear-gradient(135deg, #fdfbf7 0%, #f4f6fb 50%, #f3effe 100%);
-  --panel-bg: rgba(255, 255, 255, 0.88);
-  --panel-border: rgba(226, 232, 240, 0.8);
-  --panel-shadow: 0 16px 40px rgba(148, 163, 184, 0.12);
+  /* [1] 지정 3색 컬러 */
+  --point-yellow: #F5D11A;  /* 노랑 (포인트/뱃지) */
+  --main-blue: #0086D1;     /* 진한 파랑 (메인 타이틀/테두리/주요 텍스트) */
+  --accent-green: #66D06D;  /* 연두/민트 (버튼/소제목/포커스) */
 
-  --text-main: #1e293b;
-  --text-muted: #64748b;
-  --text-muted2: #94a3b8;
+  /* [2] 미니멀 모노톤 배경 & 텍스트 */
+  --bg-main: #F8F9FA;
+  --panel-bg: #FFFFFF;
+  --panel-border: #E9ECEF;
+  --panel-shadow: 0 4px 16px rgba(0, 134, 209, 0.08);
 
-  --accent-gold: #c59b27;
-  --accent-purple: #8b5cf6;
+  --text-main: #1A252C;
+  --text-muted: #6C757D;
+  --text-muted2: #ADB5BD;
 
-  --input-bg: #f8fafc;
-  --input-border: #cbd5e1;
-  --input-focus: #a855f7;
-
-  --btn-gradient: linear-gradient(135deg, #a5f3fc 0%, #c084fc 50%, #f472b6 100%);
-  --btn-text: #0f172a;
+  --input-bg: #FAFAFA;
+  --input-border: #E9ECEF;
 }
 
 * {
@@ -30,17 +32,18 @@ html, body {
   padding: 0;
   width: 100%;
   min-height: 100%;
-  overflow-x: hidden; /* 가로 스크롤 완전 방지 */
+  overflow-x: hidden;
   font-family: "Noto Sans KR", Pretendard, system-ui, -apple-system, sans-serif;
 }
 
 body {
   color: var(--text-main);
-  background: var(--bg-gradient);
-  background-attachment: fixed;
+  background: var(--bg-main);
 }
 
-/* SCREEN (메인 대형 스크린) */
+/* ==========================================================================
+   SCREEN (메인 대형 스크린 / index.html)
+   ========================================================================== */
 .screen {
   min-height: 100vh;
   display: flex;
@@ -61,24 +64,24 @@ body {
 }
 
 .eyebrow {
-  color: var(--accent-gold);
-  letter-spacing: 0.25em;
+  color: var(--accent-green);
+  letter-spacing: 0.2em;
   font-size: 14px;
   font-weight: 800;
   margin-bottom: 4px;
 }
 
 .hero h1 {
-  font-size: clamp(32px, 5vw, 52px);
+  font-size: clamp(32px, 5vw, 48px);
   margin: 4px 0 8px 0;
-  line-height: 1.1;
+  line-height: 1.15;
   font-weight: 900;
-  color: #0f172a;
+  color: var(--main-blue);
 }
 
 .hero p {
   color: var(--text-muted);
-  font-size: clamp(14px, 1.4vw, 18px);
+  font-size: clamp(14px, 1.4vw, 17px);
   line-height: 1.5;
   margin: 0;
 }
@@ -94,38 +97,35 @@ body {
 .qr-card {
   width: 100%;
   max-width: 360px;
-  padding: 20px;
+  padding: 24px 20px;
   text-align: center;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  border: 1px solid var(--panel-border);
+  border: 2px solid var(--main-blue);
   background: var(--panel-bg);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-radius: 24px;
+  border-radius: 20px;
   box-shadow: var(--panel-shadow);
-  border-top: 4px solid var(--accent-gold);
   position: relative;
   transition: all 0.3s ease;
 }
 
 .qr-card img {
   width: 100%;
-  max-width: 220px;
+  max-width: 200px;
   background: #ffffff;
   padding: 10px;
-  border-radius: 16px;
-  border: 1px solid #e2e8f0;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+  border-radius: 12px;
+  border: 1px solid var(--panel-border);
   transition: all 0.3s ease;
 }
 
 .url {
-  margin-top: 10px;
-  color: var(--text-muted);
+  margin-top: 12px;
+  color: var(--main-blue);
   font-size: 13px;
+  font-weight: 500;
   word-break: break-all;
 }
 
@@ -136,7 +136,7 @@ body {
   color: var(--text-main);
 }
 
-/* 🔍 돋보기 버튼 */
+/* 🔍 돋보기 토글 버튼 */
 .qr-toggle-btn {
   position: absolute;
   top: 12px;
@@ -144,20 +144,20 @@ body {
   z-index: 10;
   border: 1px solid var(--panel-border);
   background: #ffffff;
-  color: #1e293b;
+  color: var(--main-blue);
   font-size: 13px;
   font-weight: 800;
   padding: 6px 12px;
   border-radius: 20px;
   cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
   transition: all 0.2s ease;
 }
 
 .qr-toggle-btn:hover {
-  background: var(--accent-gold);
+  background: var(--main-blue);
   color: #ffffff;
-  border-color: var(--accent-gold);
+  border-color: var(--main-blue);
 }
 
 /* QR 축소 시 */
@@ -176,72 +176,68 @@ body {
   display: none;
 }
 
-/* 하단 기도 목록 영역 (가로 넘침 완벽 방지) */
+/* 하단 기도 목록 영역 */
 .recent-prayers-section {
   width: 100%;
   background: var(--panel-bg);
   border: 1px solid var(--panel-border);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
   border-radius: 20px;
-  padding: 18px 20px;
-  box-shadow: var(--panel-shadow);
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 .recent-header {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .counter-badge {
   font-size: 13px;
   font-weight: 700;
-  color: var(--accent-gold);
-  background: rgba(197, 155, 39, 0.12);
-  padding: 4px 12px;
-  border-radius: 12px;
+  color: #1A252C;
+  background-color: var(--point-yellow);
+  padding: 6px 14px;
+  border-radius: 20px;
 }
 
 .recent-prayer-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
   width: 100%;
 }
 
-/* 🔥 기도 카드: 가로 확장 및 화면 폭 맞춤 / 자동 줄바꿈 */
 .recent-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
-  background: #ffffff;
-  border: 1px solid #e2e8f0;
-  border-radius: 14px;
-  padding: 14px 18px;
+  background: var(--bg-main);
+  border-radius: 12px;
+  padding: 12px 16px;
   width: 100%;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
 }
 
 .recent-name {
-  font-weight: 800;
-  color: #0f172a;
-  white-space: nowrap;
-  background: #f1f5f9;
-  padding: 4px 12px;
+  font-weight: 700;
+  color: var(--main-blue);
+  background: #ffffff;
+  border: 1px solid var(--main-blue);
+  padding: 4px 10px;
   border-radius: 8px;
-  font-size: 14px;
+  font-size: 12px;
+  white-space: nowrap;
   flex-shrink: 0;
 }
 
 .recent-text {
   font-family: "Noto Sans KR", sans-serif;
-  color: #1e293b;
-  font-size: 16px;
-  line-height: 1.6;
+  color: var(--text-main);
+  font-size: 15px;
+  line-height: 1.5;
   font-weight: 500;
   width: 100%;
-  word-break: break-all; /* 긴 문장도 화면에 맞춰 자동 줄바꿈 */
+  word-break: break-all;
   overflow-wrap: break-word;
 }
 
@@ -249,65 +245,69 @@ body {
   text-align: center;
   color: var(--text-muted2);
   padding: 20px;
-  font-size: 15px;
+  font-size: 14px;
 }
 
-/* MOBILE (기도 입력 폼 / pray.html) */
+/* ==========================================================================
+   MOBILE (기도 입력 폼 / pray.html)
+   ========================================================================== */
 .mobile {
   min-height: 100vh;
 }
 
 .mobile-wrap {
-  width: min(600px, calc(100% - 24px));
+  width: min(480px, calc(100% - 32px));
   margin: 0 auto;
-  padding: 12px 0 30px;
+  padding: 24px 0;
+  text-align: center;
 }
 
 .share-header {
-  text-align: center;
-  margin-bottom: 14px;
+  margin-bottom: 20px;
 }
 
 .share-header h1 {
-  margin: 2px 0 6px 0;
-  font-size: clamp(32px, 7vw, 48px);
+  margin: 4px 0 8px 0;
+  font-size: clamp(28px, 6vw, 36px);
   font-weight: 900;
-  letter-spacing: -0.03em;
-  line-height: 1.15;
-  color: #0f172a;
+  color: var(--main-blue);
 }
 
-.pray-symbol { font-size: 0.8em; }
+.pray-symbol { 
+  font-size: 0.85em; 
+}
 
 .intro {
   color: var(--text-muted);
-  font-size: 15px;
+  font-size: 14px;
   line-height: 1.5;
   margin: 0;
 }
 
 .compact-form {
-  padding: 20px 24px;
-  border: 1px solid var(--panel-border);
+  text-align: left;
+  padding: 24px 20px;
+  border: 2px solid var(--main-blue);
   background: var(--panel-bg);
-  border-radius: 24px;
-  border-top: 4px solid var(--accent-gold);
+  border-radius: 16px;
+  box-shadow: var(--panel-shadow);
 }
 
 label {
   display: block;
-  margin-bottom: 6px;
-  font-size: 15px;
-  font-weight: 800;
-  color: var(--text-main);
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--main-blue);
 }
 
-label:not(:first-child) { margin-top: 14px; }
+label:not(:first-child) { 
+  margin-top: 18px; 
+}
 
 label span {
   color: var(--text-muted2);
-  font-weight: 500;
-  font-size: 13px;
+  font-weight: 400;
 }
 
 input, textarea {
@@ -315,7 +315,7 @@ input, textarea {
   border: 1px solid var(--input-border);
   background: var(--input-bg);
   color: var(--text-main);
-  border-radius: 12px;
+  border-radius: 10px;
   outline: none;
   font-family: "Noto Sans KR", sans-serif;
   transition: all 0.2s ease;
@@ -323,32 +323,36 @@ input, textarea {
 
 input {
   min-height: 48px;
-  padding: 12px 16px;
+  padding: 12px 14px;
   font-size: 15px;
 }
 
 textarea {
-  min-height: 140px;
+  min-height: 130px;
   resize: vertical;
-  padding: 14px 16px;
+  padding: 14px;
   padding-bottom: 32px;
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.5;
 }
 
-input::placeholder, textarea::placeholder { color: #a0aec0; }
+input::placeholder, textarea::placeholder { 
+  color: var(--text-muted2); 
+}
 
 input:focus, textarea:focus {
-  border-color: var(--input-focus);
+  border-color: var(--accent-green);
   background: #ffffff;
-  box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.15);
+  box-shadow: 0 0 0 3px rgba(102, 208, 109, 0.2);
 }
 
-.textarea-wrap { position: relative; }
+.textarea-wrap { 
+  position: relative; 
+}
 
 .char {
   position: absolute;
-  right: 14px;
+  right: 12px;
   bottom: 10px;
   color: var(--text-muted2);
   font-size: 12px;
@@ -356,60 +360,65 @@ input:focus, textarea:focus {
 
 #submitBtn {
   width: 100%;
-  margin-top: 16px;
-  padding: 14px;
+  margin-top: 20px;
+  padding: 16px;
   border: 0;
-  border-radius: 14px;
-  background: var(--btn-gradient);
-  color: var(--btn-text);
-  font-size: 18px;
-  font-weight: 800;
+  border-radius: 10px;
+  background-color: var(--accent-green);
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 700;
   cursor: pointer;
-  box-shadow: 0 8px 20px rgba(192, 132, 252, 0.35);
-  transition: transform 0.15s ease;
+  box-shadow: 0 4px 10px rgba(102, 208, 109, 0.3);
+  transition: opacity 0.2s ease;
 }
 
-#submitBtn:hover { transform: translateY(-1px); }
+#submitBtn:active { 
+  opacity: 0.9; 
+}
+
+#submitBtn:disabled {
+  background-color: var(--text-muted2);
+  box-shadow: none;
+  cursor: not-allowed;
+}
 
 .message {
   min-height: 20px;
-  margin-top: 8px;
+  margin-top: 10px;
   text-align: center;
   font-weight: 700;
   font-size: 14px;
 }
 
-.message.ok { color: #10b981; }
-.message.error { color: #ef4444; }
+.message.ok { color: var(--accent-green); }
+.message.error { color: #E53E3E; }
 
 .home-btn-wrap {
   margin-top: 16px;
-  text-align: center;
 }
 
 .home-btn {
   display: block;
   width: 100%;
-  padding: 14px 18px;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.9);
+  padding: 14px;
+  border-radius: 10px;
+  background: #ffffff;
   border: 1px solid var(--panel-border);
-  color: var(--text-main);
-  font-size: 15px;
+  color: var(--main-blue);
+  font-size: 14px;
   font-weight: 700;
   text-decoration: none !important;
-  box-shadow: 0 4px 12px rgba(148, 163, 184, 0.12);
   transition: all 0.2s ease;
 }
 
 .home-btn:hover {
   background: #ffffff;
-  border-color: var(--accent-gold);
-  color: var(--accent-gold);
+  border-color: var(--main-blue);
 }
 
 .privacy {
-  margin-top: 12px;
+  margin-top: 20px;
   text-align: center;
   color: var(--text-muted2);
   font-size: 12px;
