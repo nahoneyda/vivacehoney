@@ -4,6 +4,7 @@ const http = require("http");
 const path = require("path");
 const { Server } = require("socket.io");
 const { createClient } = require("@supabase/supabase-js");
+const { WebSocket } = require('ws');
 
 const app = express();
 const server = http.createServer(app);
@@ -18,7 +19,15 @@ const supabaseUrl = process.env.SUPABASE_URL;
 
 // 수정 코드: .env의 SUPABASE_SECRET_KEY 이름을 읽도록 변경
 const supabaseKey = process.env.SUPABASE_SECRET_KEY || process.env.SUPABASE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
+//const supabase = createClient(supabaseUrl, supabaseKey);
+const supabase = createClient(
+  supabaseUrl, supabaseKey,
+  {
+    realtime: {
+      transport: WebSocket
+    }
+  }
+);
 
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
