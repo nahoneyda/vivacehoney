@@ -20,6 +20,7 @@ fetch("/api/qr")
       </a>
     `;
   });
+``
 
 // 🔍 QR 코드 확대/축소 토글 이벤트
 if (qrToggleBtn) {
