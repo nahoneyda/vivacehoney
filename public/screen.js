@@ -13,7 +13,12 @@ fetch("/api/qr")
   .then(r => r.json())
   .then(data => {
     document.getElementById("qr").src = data.dataUrl;
-    document.getElementById("prayUrl").textContent = data.url;
+
+    document.getElementById("prayUrl").innerHTML = `
+      ${data.url}
+        📱 기도제목 작성하기
+      </a>
+    `;
   });
 
 // 🔍 QR 코드 확대/축소 토글 이벤트
