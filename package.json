@@ -10,7 +10,7 @@
     "start:prod": "node server.js"
   },
   "engines": {
-    "node": ">=22"
+    "node": "22.x"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.52.1",
