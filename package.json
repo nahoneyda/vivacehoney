@@ -10,13 +10,14 @@
     "start:prod": "node server.js"
   },
   "engines": {
-  "node": ">=22"
+    "node": ">=22"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.52.1",
     "dotenv": "^17.4.2",
     "express": "^4.21.2",
     "qrcode": "^1.5.4",
+    "sharp": "^0.35.3",
     "socket.io": "^4.8.1"
   }
 }
